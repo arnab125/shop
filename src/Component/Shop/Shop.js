@@ -4,6 +4,7 @@ import './Shop.css';
 import { useState } from 'react';
 import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
+import { addToDb } from '../../utilities/fakedb';
 
 
 
@@ -18,8 +19,10 @@ const Shop = () => {
 
   const addToCart = (product) => {
     console.log('Product Added',product);
+    const key = product.id;
     //pop up notification
     SetCart([...cart,product])
+    addToDb(key)
     }
     
 
