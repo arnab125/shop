@@ -4,7 +4,7 @@ import './Shop.css';
 import { useState } from 'react';
 import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
-import { addToDb } from '../../utilities/fakedb';
+import { addToDb, deleteShoppingCart } from '../../utilities/fakedb';
 import { getStoredCart } from '../../utilities/fakedb';
 
 
@@ -63,6 +63,8 @@ const Shop = () => {
             </div> 
             <div className='cart-container'>
                 <Cart cart={cart}></Cart>
+                <button onClick={deleteShoppingCart}>CLEAR</button>
+                <h4 className='abc'>Press Clear once and reload page to reset</h4>
             </div>
         </div>
     );
