@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Product from '../Product/Product';
 import Cart from '../Cart/Cart';
 import { addToDb } from '../../utilities/fakedb';
+import { getStoredCart } from '../../utilities/fakedb';
 
 
 
@@ -17,12 +18,36 @@ const Shop = () => {
     .then(data=>setProducts(data))
   },[])
 
-  const addToCart = (product) => {
-    console.log('Product Added',product);
-    const key = product.id;
-    //pop up notification
-    SetCart([...cart,product])
-    addToDb(key)
+  useEffect(()=>{
+    const storedCart = getStoredCart();
+    const savedCart = [];
+    for (const id in storedCart){
+      const addedProduct = products.find(product=>product.id===id);
+      if(addedProduct){
+        const quantity = storedCart[id];
+        addedProduct.quantity = quantity;
+        savedCart.push(addedProduct);
+      }
+    }
+    SetCart(savedCart)
+  },[products])
+
+  const addToCart = (selectedProduct) => {
+    //console.log('Product Added',product);
+    const key = selectedProduct.id;
+    let newCart = [];
+    const exists = cart.find(product=>product.id == selectedProduct.id)
+    if (!exists){
+        selectedProduct.quantity = 1;
+        newCart = [...cart,selectedProduct]
+    }
+    else{
+        const remaining = cart.filter(product=>product.id !== selectedProduct.id)
+        exists.quantity = exists.quantity + 1;
+        newCart = [...remaining,exists]
+    }
+    SetCart(newCart);
+    addToDb(key);//or addToDb(selectedProduct.quantity)
     }
     
 
